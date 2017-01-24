@@ -21,9 +21,13 @@ About the app, and contributors
 
 ## Development
 `npm start` (http://localhost:3000)
+
 `npm test`
+
 `npm run build` -> `build`folder
 
+
 ### Import jquery
-npm i jquery --save
-import $ from 'jquery'
+`npm i jquery --save`
+
+import in the code `import $ from 'jquery'`
