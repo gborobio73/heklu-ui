@@ -2,6 +2,7 @@ Lights art project
 ==================
 
 Front end developed using React and Material UI
+This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 ## React
 A JavaScript libary for buiding user interfaces. https://facebook.github.io/react/
