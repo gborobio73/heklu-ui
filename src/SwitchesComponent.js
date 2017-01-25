@@ -46,7 +46,7 @@ class SwitchesComponent extends React.Component {
     for (var i = 0; i <8; i++) {
       switches[i] = false;
     }
-    this.state = {switches: switches};
+    this.state = {switches: switches, all: false};
   }
 
   componentDidMount() {
@@ -63,20 +63,45 @@ class SwitchesComponent extends React.Component {
     var id = event.target.getAttribute('data-id');
     var switches = this.state.switches.slice() //new copy;
     var newState = !this.state.switches[id];
-    var that = this;
+    switches [id]= newState;
+    this.setState({switches: switches});
+    var switchNum = parseInt(id)+1;
+    console.log('toggling '+ newState +' switch #' + switchNum);  
     $.ajax({
       url: backend + '/switch/set',
-      type: 'POST',
+      type: 'PUT',
       data: JSON.stringify({'id': id, 'state': newState}),       
       contentType: 'application/json',
       success: function(response) { 
-        console.log(JSON.stringify(response)); 
-        switches [id]= newState;
-        that.setState({switches: switches});
-        var switchNum = parseInt(id)+1;
-        console.log('toggled '+ newState +' switch #' + switchNum);  
+        console.log(JSON.stringify(response));         
       },
-      error: function(request, status, error) { 
+      error: function(request, status, error) {
+        //TODO: set to previous state? 
+        console.log('Status: ' + JSON.stringify(status) ); 
+        console.log('Error: ' +JSON.stringify(request) ); 
+      }
+    });
+  } 
+
+  handleToggleAll (event){
+    var newState = !this.state.all;
+    this.setState({all: newState});
+    console.log('toggling all to'+ newState );  
+    var switches = this.state.switches.slice();
+    for (var i = 0; i <8; i++) {
+      switches[i] = newState;
+    }
+    this.setState({switches: switches});
+    $.ajax({
+      url: backend + '/switch/set',
+      type: 'PUT',
+      data: JSON.stringify({'id': -1, 'state': newState}),       
+      contentType: 'application/json',
+      success: function(response) { 
+        console.log(JSON.stringify(response));         
+      },
+      error: function(request, status, error) {
+        //TODO: set to previous state? 
         console.log('Status: ' + JSON.stringify(status) ); 
         console.log('Error: ' +JSON.stringify(request) ); 
       }
@@ -127,6 +152,11 @@ class SwitchesComponent extends React.Component {
               data-id={7} 
               toggled={this.state.switches[7]}
               onToggle={(event)=>this.handleToggle(event)}
+            /> 
+            <Toggle label="All" 
+              data-id={-1} 
+              toggled={this.state.all}
+              onToggle={(event)=>this.handleToggleAll(event)}
             />  
           </div>          
         </Paper>        
