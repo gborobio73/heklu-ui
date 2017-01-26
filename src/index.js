@@ -2,12 +2,13 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Route, IndexRoute, Link, hashHistory } from 'react-router'
+import { Router, Route, IndexRoute, Link, browserHistory } from 'react-router'
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import LightsComponent from './LightsComponent';
 import AppBarComponent from './AppBarComponent';
 import AboutComponent from './AboutComponent';
+import HekluBottomNavigation from './HekluBottomNavigation';
 
 // import App from './App';
 // import './index.css';
@@ -30,10 +31,10 @@ const App = React.createClass({
   render() {
     return (
       <div>
-	    <MuiThemeProvider >
-	  		<AppBarComponent/>		  	
-		</MuiThemeProvider>
-        
+  	    <MuiThemeProvider >
+  	  		<AppBarComponent/>		  	
+  		  </MuiThemeProvider>
+          
         {/* change the <a>s to <Link>s */}
         {/*<ul>
           <li><Link to="/about">About</Link></li>
@@ -45,13 +46,15 @@ const App = React.createClass({
           the router will figure out the children for us
         */}
         {this.props.children}
+        
+        <HekluBottomNavigation/>        
       </div>
     )
   }
 })
 
 ReactDOM.render(
-	<Router history={hashHistory}>
+	<Router history={browserHistory}>
 	    <Route path="/" component={App}>
 	    	<IndexRoute component={LightsComponent} />
 	      <Route path="lights" component={LightsComponent} />

@@ -2,6 +2,7 @@ import React from 'react';
 import Paper from 'material-ui/Paper';
 import Toggle from 'material-ui/Toggle';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import Snackbar from 'material-ui/Snackbar';
 
 import $ from 'jquery'; 
 
@@ -46,7 +47,14 @@ class SwitchesComponent extends React.Component {
     for (var i = 0; i <8; i++) {
       switches[i] = false;
     }
-    this.state = {switches: switches, all: false};
+    this.state = {
+      switches: switches, 
+      all: false, 
+      errorBar: {
+        open: false, 
+        message:''
+      }
+    }
   }
 
   componentDidMount() {
@@ -59,17 +67,48 @@ class SwitchesComponent extends React.Component {
     });
   }
 
-  handleToggle (event){
-    var id = event.target.getAttribute('data-id');
-    var switches = this.state.switches.slice() //new copy;
-    var newState = !this.state.switches[id];
+  togglleAllTo(newState){
+    console.log('toggling all to'+ newState );  
+    var switches = this.state.switches.slice();
+    for (var i = 0; i <8; i++) {
+      switches[i] = newState;
+    }
+    this.setState({switches: switches});
+    this.setState({all: newState});
+  }
+
+  setSwitchTo(id, newState){
+    var switches = this.state.switches.slice() //new copy;    
     switches [id]= newState;
     this.setState({switches: switches});
     if (switches.some((element, index, array)=> element === false)) {
       this.setState({ all: false });
     }
-    var switchNum = parseInt(id)+1;
-    console.log('toggling '+ newState +' switch #' + switchNum);  
+    if (switches.every((element, index, array)=> element === true)) {
+      this.setState({ all: true });
+    }
+  }
+
+  parseErrorMessage(request){
+    try{
+      var error = JSON.parse(request.responseText);
+      return error.message;
+    }catch(e){
+      return "Snap! Something went wrong. Refresh page."
+    }
+  }
+
+  showError(request){
+    this.setState({
+      errorBar: {open: true, message: this.parseErrorMessage(request)},
+    });
+  }
+
+  handleToggle (event){
+    var id = event.target.getAttribute('data-id');
+    var newState = !this.state.switches[id];
+    this.setSwitchTo(id, newState);
+    var self= this;
     $.ajax({
       url: backend + '/switch/set',
       type: 'PUT',
@@ -79,9 +118,8 @@ class SwitchesComponent extends React.Component {
         console.log(JSON.stringify(response));         
       },
       error: function(request, status, error) {
-        //TODO: set to previous state? 
-        console.log('Status: ' + JSON.stringify(status) ); 
-        console.log('Error: ' +JSON.stringify(request) ); 
+        self.setSwitchTo(id, !newState);
+        self.showError(request);              
       }
     });
      
@@ -89,13 +127,8 @@ class SwitchesComponent extends React.Component {
 
   handleToggleAll (event){
     var newState = !this.state.all;
-    this.setState({all: newState});
-    console.log('toggling all to'+ newState );  
-    var switches = this.state.switches.slice();
-    for (var i = 0; i <8; i++) {
-      switches[i] = newState;
-    }
-    this.setState({switches: switches});
+    this.togglleAllTo(newState)
+    var self= this;
     $.ajax({
       url: backend + '/switch/set',
       type: 'PUT',
@@ -105,12 +138,17 @@ class SwitchesComponent extends React.Component {
         console.log(JSON.stringify(response));         
       },
       error: function(request, status, error) {
-        //TODO: set to previous state? 
-        console.log('Status: ' + JSON.stringify(status) ); 
-        console.log('Error: ' +JSON.stringify(request) ); 
+        self.togglleAllTo(!newState);  
+        self.showError(request);              
       }
     });
   } 
+
+  handleErrorBarClose (event){
+    this.setState({
+      errorBar: {open: false, message: ''},
+    });
+  };
 
   render() {
     return (
@@ -165,7 +203,14 @@ class SwitchesComponent extends React.Component {
             />  
           </div>          
         </Paper>        
+        <Snackbar
+          open={this.state.errorBar.open}
+          message={this.state.errorBar.message}
+          autoHideDuration={7000}
+          onRequestClose={(event)=>this.handleErrorBarClose(event)}
+        />
       </div>  
+
     )
   }
 }
