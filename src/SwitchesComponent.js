@@ -65,6 +65,9 @@ class SwitchesComponent extends React.Component {
     var newState = !this.state.switches[id];
     switches [id]= newState;
     this.setState({switches: switches});
+    if (switches.some((element, index, array)=> element === false)) {
+      this.setState({ all: false });
+    }
     var switchNum = parseInt(id)+1;
     console.log('toggling '+ newState +' switch #' + switchNum);  
     $.ajax({
@@ -81,6 +84,7 @@ class SwitchesComponent extends React.Component {
         console.log('Error: ' +JSON.stringify(request) ); 
       }
     });
+     
   } 
 
   handleToggleAll (event){
@@ -153,6 +157,7 @@ class SwitchesComponent extends React.Component {
               toggled={this.state.switches[7]}
               onToggle={(event)=>this.handleToggle(event)}
             /> 
+            <br/>
             <Toggle label="All" 
               data-id={-1} 
               toggled={this.state.all}
