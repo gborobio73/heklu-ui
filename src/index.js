@@ -2,7 +2,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Route, IndexRoute, Link, browserHistory } from 'react-router'
+import { Router, Route, IndexRoute, Link, hashHistory } from 'react-router'
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import LightsComponent from './LightsComponent';
@@ -54,7 +54,7 @@ const App = React.createClass({
 })
 
 ReactDOM.render(
-	<Router history={browserHistory}>
+	<Router history={hashHistory}>
 	    <Route path="/" component={App}>
 	    	<IndexRoute component={LightsComponent} />
 	      <Route path="lights" component={LightsComponent} />

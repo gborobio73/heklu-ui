@@ -4,7 +4,7 @@ import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigati
 import Paper from 'material-ui/Paper';
 import IconLocationOn from 'material-ui/svg-icons/communication/location-on';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import { browserHistory } from 'react-router'
+import { hashHistory } from 'react-router'
 
 const recentsIcon = <FontIcon className="material-icons">lightbulb_outline</FontIcon>;
 const favoritesIcon = <FontIcon className="material-icons">speaker_notes</FontIcon>;
@@ -30,13 +30,13 @@ class HekluBottomNavigation extends Component {
     this.setState({selectedIndex: index})
     switch(index) {
       case 0:
-          browserHistory.push('/lights');
+          hashHistory.push('/lights');
           break;
       case 1:
-          //browserHistory.push('/console');
+          //hashHistory.push('/console');
           break;
       case 2:
-          browserHistory.push('/about');
+          hashHistory.push('/about');
           break;
       default:
           break;
