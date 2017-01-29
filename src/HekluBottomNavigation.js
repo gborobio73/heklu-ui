@@ -2,12 +2,12 @@ import React, {Component} from 'react';
 import FontIcon from 'material-ui/FontIcon';
 import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
 import Paper from 'material-ui/Paper';
-import IconLocationOn from 'material-ui/svg-icons/communication/location-on';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import { hashHistory } from 'react-router'
+import { hashHistory } from 'react-router';
+import MediaQuery from 'react-responsive';
 
-const recentsIcon = <FontIcon className="material-icons">lightbulb_outline</FontIcon>;
-const favoritesIcon = <FontIcon className="material-icons">speaker_notes</FontIcon>;
+const switchesIcon = <FontIcon className="material-icons">lightbulb_outline</FontIcon>;
+const consoleIcon = <FontIcon className="material-icons">speaker_notes</FontIcon>;
 const aboutIcon = <FontIcon className="material-icons">contact_mail</FontIcon>;
 
 const styles = {
@@ -19,9 +19,6 @@ const styles = {
     },    
 };
 class HekluBottomNavigation extends Component {
-  constructor() {
-    super();
-  }
   state = {
     selectedIndex: 0,
   };
@@ -33,7 +30,7 @@ class HekluBottomNavigation extends Component {
           hashHistory.push('/lights');
           break;
       case 1:
-          //hashHistory.push('/console');
+          hashHistory.push('/console');
           break;
       case 2:
           hashHistory.push('/about');
@@ -50,15 +47,17 @@ class HekluBottomNavigation extends Component {
           <Paper zDepth={3} style={styles.navbar}>
             <BottomNavigation selectedIndex={this.state.selectedIndex} >
               <BottomNavigationItem
-                label="Lights"
-                icon={recentsIcon}
+                label="Switches"
+                icon={switchesIcon}
                 onTouchTap={() => this.handleTouchTap(0)}
               />
-              <BottomNavigationItem
-                label="Console"
-                icon={favoritesIcon}
-                onTouchTap={() => this.handleTouchTap(1)}
-              />
+              <MediaQuery maxWidth={641}>
+                <BottomNavigationItem
+                  label="Console"
+                  icon={consoleIcon}
+                  onTouchTap={() => this.handleTouchTap(1)}
+                />
+              </MediaQuery>              
               <BottomNavigationItem
                 label="About"
                 icon={aboutIcon}                

@@ -2,10 +2,11 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Route, IndexRoute, Link, hashHistory } from 'react-router'
+import { Router, Route, IndexRoute, hashHistory } from 'react-router'
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import LightsComponent from './LightsComponent';
+import LightsPanelComponent from './LightsPanelComponent';
+import ConsolePanelComponent from './ConsolePanelComponent';
 import AppBarComponent from './AppBarComponent';
 import AboutComponent from './AboutComponent';
 import HekluBottomNavigation from './HekluBottomNavigation';
@@ -56,10 +57,10 @@ const App = React.createClass({
 ReactDOM.render(
 	<Router history={hashHistory}>
 	    <Route path="/" component={App}>
-	    	<IndexRoute component={LightsComponent} />
-	      <Route path="lights" component={LightsComponent} />
+	    	<IndexRoute component={LightsPanelComponent} />
+	      <Route path="lights" component={LightsPanelComponent} />
 	      <Route path="about" component={AboutComponent} />	      
-	      {/*<Route path="inbox" component={Inbox} />*/}
+	      <Route path="console" component={ConsolePanelComponent} />
 	    </Route>
   	</Router>
 	,

@@ -1,17 +1,11 @@
 import React from 'react';
 import Paper from 'material-ui/Paper';
 import Toggle from 'material-ui/Toggle';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Snackbar from 'material-ui/Snackbar';
 
 import $ from 'jquery'; 
 
-const styles = {
-  lights: {
-    float: "left",
-  	width: "39%",
-  	maxWidth: 250,
-  },
+const styles = {  
   toggle: {
     marginBottom: 32,
   },
@@ -22,11 +16,8 @@ const styles = {
   	paddingBottom: 10,
   	
   },
-  switches: {
-  	//maxWidth: 100,
-  	//display: "block",
-  	//marginLeft: "auto",
-  	//marginRight: "auto",
+  switch: {
+    marginBottom: 15,
   },
   
 };
@@ -34,10 +25,7 @@ var backend='';
 if (window.location.port === '3000') {
   backend ='http://localhost:8080';
 }
-/*
-state:
-switches: array of 8 positions, indicating tru or false
-*/
+
 class SwitchesComponent extends React.Component {
 
   constructor(props) {
@@ -68,7 +56,7 @@ class SwitchesComponent extends React.Component {
   }
 
   togglleAllTo(newState){
-    console.log('toggling all to'+ newState );  
+    console.log('toggling all to '+ newState );  
     var switches = this.state.switches.slice();
     for (var i = 0; i <8; i++) {
       switches[i] = newState;
@@ -79,7 +67,7 @@ class SwitchesComponent extends React.Component {
 
   setSwitchTo(id, newState){
     var switches = this.state.switches.slice() //new copy;    
-    switches [id]= newState;
+    switches[id]= newState;
     this.setState({switches: switches});
     if (switches.some((element, index, array)=> element === false)) {
       this.setState({ all: false });
@@ -152,45 +140,53 @@ class SwitchesComponent extends React.Component {
 
   render() {
     return (
-        <div style={styles.lights}>
+      <div >
         <Paper style={styles.paper} zDepth={3} >
-          <div style={styles.switches}>
+          <div >
             <Toggle label="One" 
+              style={styles.switch}
               data-id={0} 
               toggled={this.state.switches[0]}
               onToggle={(event)=>this.handleToggle(event)}
             />
             <Toggle label="Two" 
+              style={styles.switch}
               data-id={1} 
               toggled={this.state.switches[1]}
               onToggle={(event)=>this.handleToggle(event)}
             />
             <Toggle label="Three" 
+              style={styles.switch}
               data-id={2} 
               toggled={this.state.switches[2]}
               onToggle={(event)=>this.handleToggle(event)}
             />
             <Toggle label="Four" 
+              style={styles.switch}
               data-id={3} 
               toggled={this.state.switches[3]}
               onToggle={(event)=>this.handleToggle(event)}
             />
             <Toggle label="Five" 
+              style={styles.switch}
               data-id={4} 
               toggled={this.state.switches[4]}
               onToggle={(event)=>this.handleToggle(event)}
             />
             <Toggle label="Six" 
+              style={styles.switch}
               data-id={5} 
               toggled={this.state.switches[5]}
               onToggle={(event)=>this.handleToggle(event)}
             />
             <Toggle label="Seven" 
+              style={styles.switch}
               data-id={6} 
               toggled={this.state.switches[6]}
               onToggle={(event)=>this.handleToggle(event)}
             />
             <Toggle label="Eight" 
+              style={styles.switch}
               data-id={7} 
               toggled={this.state.switches[7]}
               onToggle={(event)=>this.handleToggle(event)}

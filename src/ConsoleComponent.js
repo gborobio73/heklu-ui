@@ -1,29 +1,37 @@
 import React from 'react';
-//import RaisedButton from 'material-ui/RaisedButton';
-//import {List, ListItem} from 'material-ui/List';
 import Paper from 'material-ui/Paper';
-import Toggle from 'material-ui/Toggle';
 
 const styles = {
-  	console: {
-  		float: "right",
-  		width: "59%",
-  	},
   	paper: {
 	  	paddingLeft: 10,
 	  	paddingRight: 10,
 	  	paddingTop: 10,
 	  	paddingBottom: 10,
 	},
+	console:{
+		height: 345,
+    	width: '100%',
+    	resize: 'none',
+    	border: 'none',
+	}
 };
+class ConsoleComponent extends React.Component{
 
-const ConsoleComponent = () => (
-	<div style={styles.console}>		
+  constructor(props) {
+    super(props);
+    this.state = {console: '$ connected.\r\n$ 197.345.6.234 turn switch 1 ON\r\n'};
+  }
+
+  render() {
+    return (      
+        <div >		
 		<Paper style={styles.paper} zDepth={3} >
-	    	Something happened
-	    </Paper>
-	</div>
+			<textarea style={styles.console} readOnly value={this.state.console}>
+			</textarea>
+		</Paper>
+	</div>     
+    );
+}
 
-);
-
+}
 export default ConsoleComponent;

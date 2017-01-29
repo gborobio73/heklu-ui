@@ -3,22 +3,14 @@ import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
-import FlatButton from 'material-ui/FlatButton';
-import Toggle from 'material-ui/Toggle';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import NavigationClose from 'material-ui/svg-icons/navigation/close';
-import { Router, Route, Link, browserHistory } from 'react-router';
+import { Link } from 'react-router';
 
 const styles = {
   app_bar: {
     marginBottom: 10,
   },
 };
-
-const navigateToLigths = function(event){
-    alert('lights');
-};
-
 
 const LightsMenu = (props) => (
   
@@ -45,8 +37,6 @@ class AppBarComponent extends Component {
     logged: true,
   };
 
-
-
   handleChange = (event, logged) => {
     this.setState({logged: logged});
   };
@@ -55,11 +45,11 @@ class AppBarComponent extends Component {
     return (
       <div>
         <AppBar
-          title="Lights"
+          title="Heklu  "
           style={styles.app_bar}
           //iconElementLeft={<IconButton><NavigationClose /></IconButton>}
           showMenuIconButton={false}
-          iconElementRight={<LightsMenu />}
+          //iconElementRight={<LightsMenu />}
         />        
       </div>
     );

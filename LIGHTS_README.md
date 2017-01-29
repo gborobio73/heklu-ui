@@ -11,6 +11,13 @@ A JavaScript libary for buiding user interfaces. https://facebook.github.io/reac
 A Set of React Components that Implement Google's Material Design. http://www.material-ui.com/#/
 Google Material is a unified system that combines theory, resources, and tools for crafting digital experiences. https://material.io/
 
+## Other UI frameworks
+- jQuery: to make ajax calls to backend
+- react-responsive: brings media queries to react
+
+## Mobile first:
+@media (min-width:641px)  { /* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */ }
+From that onwards we show switches and console
 
 ## Lights app views
 **Switches**
