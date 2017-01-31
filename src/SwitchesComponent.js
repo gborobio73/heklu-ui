@@ -44,15 +44,27 @@ class SwitchesComponent extends React.Component {
       }
     }
   }
-
+  
   componentDidMount() {
+    var self= this;
     $.ajax({
         url: backend+'/switch',
         type: 'GET',        
         success: function(response) { 
-          console.log(JSON.stringify(response)); 
+          console.log(JSON.stringify(response));
+          self.setState({switches: response.slice()});
+          self.setAllToggle(self.state.switches);
         }
     });
+  }
+  
+  setAllToggle(switches){
+    if (switches.some((element, index, array)=> element === false)) {
+      this.setState({ all: false });
+    }
+    if (switches.every((element, index, array)=> element === true)) {
+      this.setState({ all: true });
+    }
   }
 
   togglleAllTo(newState){
@@ -69,12 +81,7 @@ class SwitchesComponent extends React.Component {
     var switches = this.state.switches.slice() //new copy;    
     switches[id]= newState;
     this.setState({switches: switches});
-    if (switches.some((element, index, array)=> element === false)) {
-      this.setState({ all: false });
-    }
-    if (switches.every((element, index, array)=> element === true)) {
-      this.setState({ all: true });
-    }
+    this.setAllToggle(switches);
   }
 
   parseErrorMessage(request){
