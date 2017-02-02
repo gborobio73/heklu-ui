@@ -36,7 +36,7 @@ class ConsoleComponent extends React.Component{
   componentDidMount() {
   	var self = this;
     var protocol = (document.location.protocol === "http:") ? "ws:": "wss:";
-    var port = '8080';
+    var port = (window.location.hostname === 'localhost') ? '8080': '8000';
     var socket = new WebSocket(protocol +'//' + window.location.hostname +':' +port + '/gs-guide-websocket');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
