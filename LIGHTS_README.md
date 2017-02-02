@@ -14,6 +14,7 @@ Google Material is a unified system that combines theory, resources, and tools f
 ## Other UI frameworks
 - jQuery: to make ajax calls to backend
 - react-responsive: brings media queries to react
+- react-router: routing library for React (https://github.com/ReactTraining/react-router)
 
 ## Mobile first:
 @media (min-width:641px)  { /* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */ }
