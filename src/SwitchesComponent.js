@@ -48,7 +48,7 @@ class SwitchesComponent extends React.Component {
     }
   }
 
-  connectToTopic(){
+  connectToTopic(self){
     var protocol = (document.location.protocol === "http:") ? "ws:": "wss:";
     var port = (window.location.hostname === 'localhost') ? ':8080': '';
     var socket = new WebSocket(protocol +'//' + window.location.hostname + port + '/heklu-websocket');
@@ -57,11 +57,11 @@ class SwitchesComponent extends React.Component {
       function (frame) {
         stompClient.subscribe('/topic/switches', function (message) {
             var newSwitchState = JSON.parse(message.body);
-            this.setSwitchTo(newSwitchState.id, newSwitchState.state);
+            self.setSwitchTo(newSwitchState.id, newSwitchState.state);
         });
       }, 
       function(message) {
-         this.showErrorWithText(message + ' Please refresh the page.');
+         self.showErrorWithText(message + ' Please refresh the page.');
       });
   }
   
@@ -74,7 +74,7 @@ class SwitchesComponent extends React.Component {
           console.log(JSON.stringify(response));
           self.setState({switches: response.slice()});
           self.setAllToggle(self.state.switches);
-          self.connectToTopic();
+          self.connectToTopic(self);
         },
         error: function(error){
           self.showErrorWithText('Connection error. Please refresh the page.');
