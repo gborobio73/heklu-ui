@@ -57,11 +57,11 @@ class SwitchesComponent extends React.Component {
       function (frame) {
         stompClient.subscribe('/topic/switches', function (message) {
             var newSwitchState = JSON.parse(message.body);
-            self.setSwitchTo(newSwitchState.id, newSwitchState.state);
+            this.setSwitchTo(newSwitchState.id, newSwitchState.state);
         });
       }, 
       function(message) {
-         self.showErrorWithText(message + ' Please refresh the page.');
+         this.showErrorWithText(message + ' Please refresh the page.');
       });
   }
   
