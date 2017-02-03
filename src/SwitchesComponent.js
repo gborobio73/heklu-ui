@@ -2,6 +2,7 @@ import React from 'react';
 import Paper from 'material-ui/Paper';
 import Toggle from 'material-ui/Toggle';
 import Snackbar from 'material-ui/Snackbar';
+import Stomp from 'stompjs';
 
 import $ from 'jquery'; 
 
@@ -26,6 +27,8 @@ if (window.location.port === '3000') {
   backend ='http://localhost:8080';
 }
 
+var stompClient;
+
 class SwitchesComponent extends React.Component {
 
   constructor(props) {
@@ -44,6 +47,23 @@ class SwitchesComponent extends React.Component {
       }
     }
   }
+
+  connectToTopic(){
+    var protocol = (document.location.protocol === "http:") ? "ws:": "wss:";
+    var port = (window.location.hostname === 'localhost') ? ':8080': '';
+    var socket = new WebSocket(protocol +'//' + window.location.hostname + port + '/heklu-websocket');
+    stompClient = Stomp.over(socket);
+    stompClient.connect({}, 
+      function (frame) {
+        stompClient.subscribe('/topic/switches', function (message) {
+            var newSwitchState = JSON.parse(message.body);
+            self.setSwitchTo(newSwitchState.id, newSwitchState.state);
+        });
+      }, 
+      function(message) {
+         self.showErrorWithText(message + ' Please refresh the page.');
+      });
+  }
   
   componentDidMount() {
     var self= this;
@@ -54,10 +74,19 @@ class SwitchesComponent extends React.Component {
           console.log(JSON.stringify(response));
           self.setState({switches: response.slice()});
           self.setAllToggle(self.state.switches);
+          self.connectToTopic();
+        },
+        error: function(error){
+          self.showErrorWithText('Connection error. Please refresh the page.');
         }
     });
+    
   }
-  
+
+  componentWillUnmount() {
+    if(stompClient !== null && stompClient !== undefined)  stompClient.disconnect();
+  }
+
   setAllToggle(switches){
     if (switches.some((element, index, array)=> element === false)) {
       this.setState({ all: false });
@@ -68,7 +97,6 @@ class SwitchesComponent extends React.Component {
   }
 
   togglleAllTo(newState){
-    console.log('toggling all to '+ newState );  
     var switches = this.state.switches.slice();
     for (var i = 0; i <8; i++) {
       switches[i] = newState;
@@ -78,10 +106,12 @@ class SwitchesComponent extends React.Component {
   }
 
   setSwitchTo(id, newState){
-    var switches = this.state.switches.slice() //new copy;    
-    switches[id]= newState;
-    this.setState({switches: switches});
-    this.setAllToggle(switches);
+    if(this.state.switches[id] !== newState){
+      var switches = this.state.switches.slice() //new copy;    
+      switches[id]= newState;
+      this.setState({switches: switches});
+      this.setAllToggle(switches);
+    }          
   }
 
   parseErrorMessage(request){
@@ -94,8 +124,12 @@ class SwitchesComponent extends React.Component {
   }
 
   showError(request){
+    this.showErrorWithText(this.parseErrorMessage(request));
+  }  
+
+  showErrorWithText(text){
     this.setState({
-      errorBar: {open: true, message: this.parseErrorMessage(request)},
+      errorBar: {open: true, message: text},
     });
   }
 
