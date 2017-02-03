@@ -57,7 +57,11 @@ class SwitchesComponent extends React.Component {
       function (frame) {
         stompClient.subscribe('/topic/switches', function (message) {
             var newSwitchState = JSON.parse(message.body);
-            self.setSwitchTo(newSwitchState.id, newSwitchState.state);
+            if(newSwitchState.id === -1){
+              self.togglleAllTo(newSwitchState.state)
+            }else{
+              self.setSwitchTo(newSwitchState.id, newSwitchState.state);
+            }            
         });
       }, 
       function(message) {
@@ -97,12 +101,14 @@ class SwitchesComponent extends React.Component {
   }
 
   togglleAllTo(newState){
-    var switches = this.state.switches.slice();
-    for (var i = 0; i <8; i++) {
-      switches[i] = newState;
-    }
-    this.setState({switches: switches});
-    this.setState({all: newState});
+    if (this.state.switches.some((element, index, array)=> element !== newState)) {
+      var switches = this.state.switches.slice();
+      for (var i = 0; i <8; i++) {
+        switches[i] = newState;
+      }
+      this.setState({switches: switches});
+      this.setState({all: newState});   
+    }    
   }
 
   setSwitchTo(id, newState){
