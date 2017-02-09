@@ -4,8 +4,6 @@ import Toggle from 'material-ui/Toggle';
 import Snackbar from 'material-ui/Snackbar';
 import Stomp from 'stompjs';
 
-import $ from 'jquery'; 
-
 const styles = {  
   toggle: {
     marginBottom: 32,
@@ -22,10 +20,6 @@ const styles = {
   },
   
 };
-var backend='';
-if (window.location.port === '3000') {
-  backend ='http://localhost:8080';
-}
 
 var stompClient;
 
@@ -44,7 +38,7 @@ class SwitchesComponent extends React.Component {
       errorBar: {
         open: false, 
         message:''
-      }
+      },      
     }
   }
 
@@ -69,22 +63,25 @@ class SwitchesComponent extends React.Component {
       });
   }
   
-  componentDidMount() {
+  componentDidMount() {    
     var self= this;
-    $.ajax({
-        url: backend+'/switch',
-        type: 'GET',        
-        success: function(response) { 
-          console.log(JSON.stringify(response));
-          self.setState({switches: response.slice()});
+    //'https://agent.electricimp.com/SmkBeMW_hTdc'
+    fetch('https://agent.electricimp.com/SmkBeMW_hTdc')
+      .then(function(response) {
+        if(response.ok) {
+          return response.json();
+        }
+        throw new Error('Network response was not ok.');
+      })
+      .then(function(response) { 
+        console.log(response); 
+        self.setState({switches: response});
           self.setAllToggle(self.state.switches);
           self.connectToTopic(self);
-        },
-        error: function(error){
-          self.showErrorWithText('Connection error. Please refresh the page.');
-        }
-    });
-    
+      })
+      .catch(function(error) {
+        self.showErrorWithText(error.message + '. Please refresh the page.');
+      });
   }
 
   componentWillUnmount() {
@@ -144,39 +141,48 @@ class SwitchesComponent extends React.Component {
     var newState = !this.state.switches[id];
     this.setSwitchTo(id, newState);
     var self= this;
-    $.ajax({
-      url: backend + '/switch/set',
-      type: 'PUT',
-      data: JSON.stringify({'id': id, 'state': newState}),       
-      contentType: 'application/json',
-      success: function(response) { 
-        console.log(JSON.stringify(response));         
-      },
-      error: function(request, status, error) {
-        self.setSwitchTo(id, !newState);
-        self.showError(request);              
-      }
-    });
-     
+    var url ='https://agent.electricimp.com/SmkBeMW_hTdc';
+    var req = { index : id, state: newState};
+    fetch( url, {
+      method: 'POST',
+      body: JSON.stringify(req),      
+    }).then(function(response) {
+        if(response.ok) {
+          return response;
+        }
+        throw new Error('Network response was not ok.');
+      })
+      .then(function(response) { 
+        console.log(response); 
+      })
+      .catch(function(error) {
+        self.showErrorWithText(error.message + '. Please refresh the page.');
+        self.setSwitchTo(id, !newState);        
+      }); 
   } 
 
   handleToggleAll (event){
     var newState = !this.state.all;
     this.togglleAllTo(newState)
     var self= this;
-    $.ajax({
-      url: backend + '/switch/set',
-      type: 'PUT',
-      data: JSON.stringify({'id': -1, 'state': newState}),       
-      contentType: 'application/json',
-      success: function(response) { 
-        console.log(JSON.stringify(response));         
-      },
-      error: function(request, status, error) {
-        self.togglleAllTo(!newState);  
-        self.showError(request);              
-      }
-    });
+    var url ='https://agent.electricimp.com/SmkBeMW_hTdc';
+    var req = { index : -1, state: newState};
+    fetch( url, {
+      method: 'POST',
+      body: JSON.stringify(req),      
+    }).then(function(response) {
+        if(response.ok) {
+          return response;
+        }
+        throw new Error('Network response was not ok.');
+      })
+      .then(function(response) { 
+        console.log(JSON.stringify(response));  
+      })
+      .catch(function(error) {
+        self.showErrorWithText(error.message + '. Please refresh the page.');
+        self.togglleAllTo(!newState);            
+      });
   } 
 
   handleErrorBarClose (event){

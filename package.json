@@ -2,6 +2,7 @@
   "name": "art-lights",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:8080",
   "devDependencies": {
     "react-scripts": "0.8.4"
   },
@@ -20,3 +21,4 @@
     "eject": "react-scripts eject"
   }
 }
+  
