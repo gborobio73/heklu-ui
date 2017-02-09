@@ -142,7 +142,7 @@ class SwitchesComponent extends React.Component {
     this.setSwitchTo(id, newState);
     var self= this;
     var url ='https://agent.electricimp.com/SmkBeMW_hTdc';
-    var req = { index : id, state: newState};
+    var req = { index : parseInt(id, 10), state: newState};
     fetch( url, {
       method: 'POST',
       body: JSON.stringify(req),      
