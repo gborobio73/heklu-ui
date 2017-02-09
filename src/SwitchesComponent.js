@@ -22,6 +22,7 @@ const styles = {
 };
 
 var stompClient;
+var url ='https://agent.electricimp.com/SmkBeMW_hTdc';
 
 class SwitchesComponent extends React.Component {
 
@@ -31,7 +32,7 @@ class SwitchesComponent extends React.Component {
     var switches =[];
     for (var i = 0; i <8; i++) {
       switches[i] = false;
-    }
+    };
     this.state = {
       switches: switches, 
       all: false, 
@@ -39,10 +40,12 @@ class SwitchesComponent extends React.Component {
         open: false, 
         message:''
       },      
-    }
+    };
+    this.connectToTopic();
   }
 
-  connectToTopic(self){
+  connectToTopic(){
+    var self = this;
     var protocol = (document.location.protocol === "http:") ? "ws:": "wss:";
     var port = (window.location.hostname === 'localhost') ? ':8080': '';
     var socket = new WebSocket(protocol +'//' + window.location.hostname + port + '/heklu-websocket');
@@ -65,8 +68,7 @@ class SwitchesComponent extends React.Component {
   
   componentDidMount() {    
     var self= this;
-    //'https://agent.electricimp.com/SmkBeMW_hTdc'
-    fetch('https://agent.electricimp.com/SmkBeMW_hTdc')
+    fetch(url)
       .then(function(response) {
         if(response.ok) {
           return response.json();
@@ -74,10 +76,9 @@ class SwitchesComponent extends React.Component {
         throw new Error('Network response was not ok.');
       })
       .then(function(response) { 
-        console.log(response); 
-        self.setState({switches: response});
-          self.setAllToggle(self.state.switches);
-          self.connectToTopic(self);
+        //console.log(response); 
+          self.setState({switches: response});
+          self.setAllToggle(self.state.switches);          
       })
       .catch(function(error) {
         self.showErrorWithText(error.message + '. Please refresh the page.');
@@ -140,8 +141,7 @@ class SwitchesComponent extends React.Component {
     var id = event.target.getAttribute('data-id');
     var newState = !this.state.switches[id];
     this.setSwitchTo(id, newState);
-    var self= this;
-    var url ='https://agent.electricimp.com/SmkBeMW_hTdc';
+    var self= this;    
     var req = { index : parseInt(id, 10), state: newState};
     fetch( url, {
       method: 'POST',
@@ -153,7 +153,8 @@ class SwitchesComponent extends React.Component {
         throw new Error('Network response was not ok.');
       })
       .then(function(response) { 
-        console.log(response); 
+        //console.log(response); 
+        stompClient.send("/app/send", {}, JSON.stringify(req));
       })
       .catch(function(error) {
         self.showErrorWithText(error.message + '. Please refresh the page.');
@@ -165,7 +166,6 @@ class SwitchesComponent extends React.Component {
     var newState = !this.state.all;
     this.togglleAllTo(newState)
     var self= this;
-    var url ='https://agent.electricimp.com/SmkBeMW_hTdc';
     var req = { index : -1, state: newState};
     fetch( url, {
       method: 'POST',
@@ -177,7 +177,8 @@ class SwitchesComponent extends React.Component {
         throw new Error('Network response was not ok.');
       })
       .then(function(response) { 
-        console.log(JSON.stringify(response));  
+        //console.log(JSON.stringify(response));  
+        stompClient.send("/app/send", {}, JSON.stringify(req));
       })
       .catch(function(error) {
         self.showErrorWithText(error.message + '. Please refresh the page.');
