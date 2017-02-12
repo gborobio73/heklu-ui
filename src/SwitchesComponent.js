@@ -17,25 +17,27 @@ const styles = {
   },
   switch: {
     marginBottom: 15,
-  },
-  
+  },  
 };
 
 var stompClient;
-var url ='https://agent.electricimp.com/SmkBeMW_hTdc';
+//var url ='https://agent.electricimp.com/SmkBeMW_hTdc';
+var url ='/switch';
 
 class SwitchesComponent extends React.Component {
 
   constructor(props) {
     super(props);
+
+    console.log("Switches component.");
+    
     this.state = {switches: []};
     var switches =[];
-    for (var i = 0; i <8; i++) {
+    for (var i = 0; i <9; i++) {
       switches[i] = false;
     };
     this.state = {
       switches: switches, 
-      all: false, 
       errorBar: {
         open: false, 
         message:''
@@ -44,26 +46,40 @@ class SwitchesComponent extends React.Component {
     this.connectToTopic();
   }
 
-  connectToTopic(){
-    var self = this;
+  processSwitchMessage (message) {
+    var newSwitchState = JSON.parse(message.body);
+    var id = (newSwitchState.index === -1) ? 8 : newSwitchState.index 
+    this.setSwitchTo(id, newSwitchState.state);
+  }
+
+  resolveTopicHost(){
     var protocol = (document.location.protocol === "http:") ? "ws:": "wss:";
     var port = (window.location.hostname === 'localhost') ? ':8080': '';
-    var socket = new WebSocket(protocol +'//' + window.location.hostname + port + '/heklu-websocket');
-    stompClient = Stomp.over(socket);
+    return protocol +'//' + window.location.hostname + port + '/heklu-websocket';
+  }
+
+  connectClient(stompClient){
+    var self = this;
     stompClient.connect({}, 
       function (frame) {
         stompClient.subscribe('/topic/switches', function (message) {
-            var newSwitchState = JSON.parse(message.body);
-            if(newSwitchState.id === -1){
-              self.togglleAllTo(newSwitchState.state)
-            }else{
-              self.setSwitchTo(newSwitchState.id, newSwitchState.state);
-            }            
+            self.processSwitchMessage(message);
+        });
+        stompClient.subscribe('/topic/heartbeat', function (message) {
+            console.log("Received "+message.body);
         });
       }, 
       function(message) {
-         self.showErrorWithText(message + ' Please refresh the page.');
+        console.log(message);
+        self.showErrorWithText('Disconnected; please refresh the page.');
       });
+  }
+
+  connectToTopic(){
+    var host = this.resolveTopicHost();
+    var socket = new WebSocket(host);
+    stompClient = Stomp.over(socket);
+    this.connectClient(stompClient);
   }
   
   componentDidMount() {    
@@ -76,9 +92,9 @@ class SwitchesComponent extends React.Component {
         throw new Error('Network response was not ok.');
       })
       .then(function(response) { 
-        //console.log(response); 
-          self.setState({switches: response});
-          self.setAllToggle(self.state.switches);          
+          var all = self.calculateAllToggle(response);
+          response.push(all);
+          self.setState({switches: response});          
       })
       .catch(function(error) {
         self.showErrorWithText(error.message + '. Please refresh the page.');
@@ -89,32 +105,27 @@ class SwitchesComponent extends React.Component {
     if(stompClient !== null && stompClient !== undefined)  stompClient.disconnect();
   }
 
-  setAllToggle(switches){
-    if (switches.some((element, index, array)=> element === false)) {
-      this.setState({ all: false });
+  calculateAllToggle(switches){
+    if (switches.slice(0, 8).some((element, index, array)=> element === false)) {
+      return false;       
     }
-    if (switches.every((element, index, array)=> element === true)) {
-      this.setState({ all: true });
-    }
-  }
-
-  togglleAllTo(newState){
-    if (this.state.switches.some((element, index, array)=> element !== newState)) {
-      var switches = this.state.switches.slice();
-      for (var i = 0; i <8; i++) {
-        switches[i] = newState;
-      }
-      this.setState({switches: switches});
-      this.setState({all: newState});   
-    }    
+    return true;      
   }
 
   setSwitchTo(id, newState){
     if(this.state.switches[id] !== newState){
       var switches = this.state.switches.slice() //new copy;    
       switches[id]= newState;
-      this.setState({switches: switches});
-      this.setAllToggle(switches);
+      if(parseInt(id, 10) === 8){
+        for (var i = 0; i <switches.length; i++) {
+          switches[i] = newState;
+        };
+        this.setState({switches: switches});
+      }
+      else{
+        switches[8] = this.calculateAllToggle(switches);
+        this.setState({switches: switches});
+      }      
     }          
   }
 
@@ -138,11 +149,12 @@ class SwitchesComponent extends React.Component {
   }
 
   handleToggle (event){
+    var self= this; 
     var id = event.target.getAttribute('data-id');
-    var newState = !this.state.switches[id];
-    this.setSwitchTo(id, newState);
-    var self= this;    
-    var req = { index : parseInt(id, 10), state: newState};
+    var newState = !self.state.switches[id];
+    self.setSwitchTo(id, newState);    
+    var index = (parseInt(id,10) === 8) ? -1: id;    
+    var req = { index : parseInt(index, 10), state: newState};
     fetch( url, {
       method: 'POST',
       body: JSON.stringify(req),      
@@ -153,37 +165,12 @@ class SwitchesComponent extends React.Component {
         throw new Error('Network response was not ok.');
       })
       .then(function(response) { 
-        //console.log(response); 
         stompClient.send("/app/send", {}, JSON.stringify(req));
       })
       .catch(function(error) {
         self.showErrorWithText(error.message + '. Please refresh the page.');
         self.setSwitchTo(id, !newState);        
       }); 
-  } 
-
-  handleToggleAll (event){
-    var newState = !this.state.all;
-    this.togglleAllTo(newState)
-    var self= this;
-    var req = { index : -1, state: newState};
-    fetch( url, {
-      method: 'POST',
-      body: JSON.stringify(req),      
-    }).then(function(response) {
-        if(response.ok) {
-          return response;
-        }
-        throw new Error('Network response was not ok.');
-      })
-      .then(function(response) { 
-        //console.log(JSON.stringify(response));  
-        stompClient.send("/app/send", {}, JSON.stringify(req));
-      })
-      .catch(function(error) {
-        self.showErrorWithText(error.message + '. Please refresh the page.');
-        self.togglleAllTo(!newState);            
-      });
   } 
 
   handleErrorBarClose (event){
@@ -247,9 +234,10 @@ class SwitchesComponent extends React.Component {
             /> 
             <br/>
             <Toggle label="All" 
-              data-id={-1} 
-              toggled={this.state.all}
-              onToggle={(event)=>this.handleToggleAll(event)}
+              style={styles.switch}
+              data-id={8} 
+              toggled={this.state.switches[8]}
+              onToggle={(event)=>this.handleToggle(event)}
             />  
           </div>          
         </Paper>        

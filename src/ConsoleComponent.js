@@ -24,6 +24,9 @@ class ConsoleComponent extends React.Component{
 
   constructor(props) {
     super(props);
+    
+    console.log("Console component.");
+
     this.state = {
 		console: '', 
 		errorBar: {
@@ -37,10 +40,11 @@ class ConsoleComponent extends React.Component{
     var currentConsole = this.state.console;
     currentConsole = currentConsole + '\r\n$ > ' + message;
     this.setState({console: currentConsole});
+    this.refs.console.scrollTop = this.refs.console.scrollHeight;
   }
 
   componentDidMount() {
-  	var self = this;
+  	var self = this;    
     var protocol = (document.location.protocol === "http:") ? "ws:": "wss:";
     var port = (window.location.hostname === 'localhost') ? ':8080': '';
     var socket = new WebSocket(protocol +'//' + window.location.hostname + port + '/heklu-websocket');
@@ -49,10 +53,15 @@ class ConsoleComponent extends React.Component{
     	function (frame) {
 	        self.writeMessageToConsole('connected'); 
 	        stompClient.subscribe('/topic/console', function (message) {
-	            self.writeMessageToConsole(JSON.parse(message.body).string);            
+	          var theMessage =JSON.parse(message.body).string;
+            self.writeMessageToConsole(theMessage);                
         	});
+          stompClient.subscribe('/topic/heartbeat', function (message) {
+             console.log("Received "+message.body);
+          });
     	},function(message) {
-        	self.showErrorWithText(message + ' Please refresh the page.');
+          console.log(message);
+        	self.showErrorWithText('Disconnected; please refresh the page.');
       	});
   }
 
@@ -75,7 +84,7 @@ class ConsoleComponent extends React.Component{
     return (      
         <div >		
 			<Paper style={styles.paper} zDepth={3} >
-				<textarea style={styles.console} readOnly value={this.state.console}>
+				<textarea ref="console" style={styles.console} readOnly value={this.state.console}>
 				</textarea>
 			</Paper>
 			<Snackbar
