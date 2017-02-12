@@ -1,7 +1,7 @@
 import React from 'react';
 import Paper from 'material-ui/Paper';
 import Toggle from 'material-ui/Toggle';
-import Snackbar from 'material-ui/Snackbar';
+import ErrorBarComponent from './ErrorBarComponent.js';
 import Stomp from 'stompjs';
 
 const styles = {  
@@ -71,7 +71,7 @@ class SwitchesComponent extends React.Component {
       }, 
       function(message) {
         console.log(message);
-        self.showErrorWithText('Disconnected; please refresh the page.');
+        self.showErrorWithText('Disconnected.');
       });
   }
 
@@ -97,7 +97,7 @@ class SwitchesComponent extends React.Component {
           self.setState({switches: response});          
       })
       .catch(function(error) {
-        self.showErrorWithText(error.message + '. Please refresh the page.');
+        self.showErrorWithText(error.message);
       });
   }
 
@@ -134,7 +134,7 @@ class SwitchesComponent extends React.Component {
       var error = JSON.parse(request.responseText);
       return error.message;
     }catch(e){
-      return "Snap! Something went wrong. Refresh page."
+      return "Snap! Something went wrong."
     }
   }
 
@@ -168,16 +168,10 @@ class SwitchesComponent extends React.Component {
         stompClient.send("/app/send", {}, JSON.stringify(req));
       })
       .catch(function(error) {
-        self.showErrorWithText(error.message + '. Please refresh the page.');
+        self.showErrorWithText(error.message );
         self.setSwitchTo(id, !newState);        
       }); 
   } 
-
-  handleErrorBarClose (event){
-    this.setState({
-      errorBar: {open: false, message: ''},
-    });
-  };
 
   render() {
     return (
@@ -241,11 +235,9 @@ class SwitchesComponent extends React.Component {
             />  
           </div>          
         </Paper>        
-        <Snackbar
+        <ErrorBarComponent
           open={this.state.errorBar.open}
-          message={this.state.errorBar.message}
-          autoHideDuration={7000}
-          onRequestClose={(event)=>this.handleErrorBarClose(event)}
+          message={this.state.errorBar.message}          
         />
       </div>  
 

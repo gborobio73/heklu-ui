@@ -15,6 +15,30 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>Heklu</title>
+    <style type="text/css">
+      @-webkit-keyframes blink {
+          from {
+              opacity: 1.0;
+          }
+          to {
+              opacity: 0.0;
+          }
+      }
+      .blink {
+          -webkit-animation-name: blink;
+          -webkit-animation-iteration-count: infinite;
+          -webkit-animation-timing-function: cubic-bezier(1.0, 0, 0, 1.0);
+          -webkit-animation-duration: 1s;
+      }
+      .cursor {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          right: 0;
+          width: 0;
+          background; white;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>

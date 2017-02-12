@@ -16,6 +16,13 @@ import HekluBottomNavigation from './HekluBottomNavigation';
 
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
+
+const styles = {
+  heklu:{
+    maxWidth: 680,
+  },  
+};
+
 injectTapEventPlugin();
 
 /*const App = () => (
@@ -31,7 +38,7 @@ injectTapEventPlugin();
 const App = React.createClass({
   render() {
     return (
-      <div>
+      <div style={styles.heklu}>
   	    <MuiThemeProvider >
   	  		<AppBarComponent/>		  	
   		  </MuiThemeProvider>
