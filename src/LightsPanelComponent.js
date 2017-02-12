@@ -6,7 +6,7 @@ import MediaQuery from 'react-responsive';
 
 const styles = {
   panel:{
-    maxWidth: 800,
+    //maxWidth: 800,
   },
   lights: {
     marginRight: 25,
