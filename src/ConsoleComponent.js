@@ -63,7 +63,7 @@ class ConsoleComponent extends React.Component{
     stompClient = Stomp.over(socket);
     stompClient.connect({}, 
     	function (frame) {
-	        self.writeMessageToConsole('connected'); 
+	        self.writeMessageToConsole('Connected.'); 
 	        stompClient.subscribe('/topic/console', function (message) {
 	          var theMessage =JSON.parse(message.body).string;
             self.writeMessageToConsole(theMessage);                
@@ -73,7 +73,7 @@ class ConsoleComponent extends React.Component{
           });
     	},function(message) {
           console.log(message);
-          self.writeMessageToConsole("Disconnected. Refresh.");
+          self.writeMessageToConsole("Connection lost.");
         	self.showErrorWithText('Disconnected.');
       	});
   }
@@ -95,7 +95,7 @@ class ConsoleComponent extends React.Component{
 				</textarea>*/}
         <div ref="console" style={styles.console} >        
           <span>{this.state.console}</span><br/>
-          <span>[heklu ~]$ </span><span className="blink"> _</span> <span className="cursor"> </span>
+          <span>[heklu ~]$ </span><span className="blink">_</span> <span className="cursor"> </span>
         </div>
 			</Paper>
 			<ErrorBarComponent

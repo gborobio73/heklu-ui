@@ -6,11 +6,11 @@ import SwitchesComponent from './SwitchesComponent';
 
 const styles = {
   panel:{
-    maxWidth: 800,
+    //maxWidth: 800,
   },   
   consoleLandscape: {
       float: 'right',
-      width: '58%',       
+      width: '68%',       
   }, 
   consolePortrait: {
       float: 'right',
@@ -20,7 +20,7 @@ const styles = {
   lights: {
     marginRight: 25,
     float: "left",
-    width: "38%",
+    width: "28%",
     maxWidth: 250,
     marginBottom: 60,
   },

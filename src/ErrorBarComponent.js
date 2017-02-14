@@ -1,6 +1,11 @@
 import React from 'react';
 import Snackbar from 'material-ui/Snackbar';
 
+const styles = {
+    errorbar: {
+      
+    },    
+};
 
 class ErrorBarComponent extends React.Component {
 
@@ -42,14 +47,18 @@ class ErrorBarComponent extends React.Component {
   };
 
   render() {
-    return (     
+    return (
+    <div>
       <Snackbar
           open={this.state.open}
           message={this.state.message}
           action="refresh"
           onRequestClose={(event)=>this.handleErrorBarClose(event)}
           onActionTouchTap={this.handleActionTouchTap}
-        />
+          style={styles.errorbar}
+        />  
+    </div>     
+      
     )
   }
 }

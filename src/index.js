@@ -19,7 +19,9 @@ import HekluBottomNavigation from './HekluBottomNavigation';
 
 const styles = {
   heklu:{
-    maxWidth: 680,
+    //maxWidth: 680,
+    // marginLeft: '25%',
+    // marginRight: '25%',
   },  
 };
 
@@ -38,7 +40,7 @@ injectTapEventPlugin();
 const App = React.createClass({
   render() {
     return (
-      <div style={styles.heklu}>
+      <div style={styles.heklu} className="screen">
   	    <MuiThemeProvider >
   	  		<AppBarComponent/>		  	
   		  </MuiThemeProvider>
@@ -53,9 +55,12 @@ const App = React.createClass({
           next we replace `<Child>` with `this.props.children`
           the router will figure out the children for us
         */}
-        {this.props.children}
-        
-        <HekluBottomNavigation/>        
+        <div >
+          {this.props.children}
+        </div>
+        <div className="screen">
+          <HekluBottomNavigation />        
+        </div>        
       </div>
     )
   }

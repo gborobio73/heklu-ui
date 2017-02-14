@@ -15,8 +15,7 @@ const styles = {
       position: 'fixed',
       bottom:0,
       left:0,
-      width: '100%',
-      maxWidth: 680,
+      width: '100%',      
     },    
 };
 class HekluBottomNavigation extends Component {
@@ -44,8 +43,9 @@ class HekluBottomNavigation extends Component {
 
   render() {
     return (      
+      <div >
         <MuiThemeProvider >
-          <Paper zDepth={3} style={styles.navbar}>
+          <Paper zDepth={3} style={styles.navbar} className="navbar-screen">
             <BottomNavigation selectedIndex={this.state.selectedIndex} >
               <BottomNavigationItem
                 label="Switches"
@@ -67,6 +67,7 @@ class HekluBottomNavigation extends Component {
             </BottomNavigation>
           </Paper>
         </MuiThemeProvider >      
+      </div>
     );
   }
 }

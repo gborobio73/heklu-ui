@@ -11,7 +11,7 @@ const styles = {
   lights: {
     marginRight: 25,
     float: "left",
-    width: "38%",
+    width: "28%",
     maxWidth: 250,
     marginBottom: 60,
   },
@@ -26,7 +26,7 @@ const styles = {
   }, 
   console: {
     float: 'right',
-    width: '58%',
+    width: '68%',
     marginBottom: 60,
   }, 
 };
