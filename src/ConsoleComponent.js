@@ -4,6 +4,9 @@ import ErrorBarComponent from './ErrorBarComponent.js';
 import Stomp from 'stompjs';
 
 const styles = {
+  consolePannel:{
+    //display: 'none'
+  },
 	paper: {
   	paddingLeft: 10,
   	paddingRight: 10,
@@ -14,6 +17,7 @@ const styles = {
     letterSpacing: '0.12em',
     textShadow: '0 0 2px rgba(1, 210, 36, 0.75)',   
     background: 'black',
+    margin: '0 5px 0 5px',
 	},
 	console:{
 		height: 370,
@@ -24,6 +28,7 @@ const styles = {
     whiteSpace: 'pre-wrap',
     overflow: 'overlay',
     fontSize: '0.7em',
+
 	}
 
 };
@@ -43,7 +48,9 @@ class ConsoleComponent extends React.Component{
 	        open: false, 
 	        message:''
       	}
-      };
+    };
+
+    styles.consolePannel.display ='none';
   }
 
   writeMessageToConsole(message){
@@ -89,15 +96,15 @@ class ConsoleComponent extends React.Component{
   }
   render() {
     return (      
-        <div >		
-			<Paper style={styles.paper} zDepth={3} >
-				{/*<textarea ref="console" style={styles.console} readOnly value={this.state.console}>
-				</textarea>*/}
-        <div ref="console" style={styles.console} >        
-          <span>{this.state.console}</span><br/>
-          <span>[heklu ~]$ </span><span className="blink">_</span> <span className="cursor"> </span>
-        </div>
-			</Paper>
+      <div style={styles.consolePannel} id="consolePannel">		
+  			<Paper style={styles.paper} zDepth={3} >
+  				{/*<textarea ref="console" style={styles.console} readOnly value={this.state.console}>
+  				</textarea>*/}
+          <div ref="console" style={styles.console} >        
+            <span>{this.state.console}</span><br/>
+            <span>[heklu ~]$ </span><span className="blink">_</span> <span className="cursor"> </span>
+          </div>
+  			</Paper>
 			<ErrorBarComponent
           open={this.state.errorBar.open}
           message={this.state.errorBar.message}          

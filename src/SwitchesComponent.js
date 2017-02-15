@@ -13,7 +13,11 @@ const styles = {
   	paddingRight: 10,
   	paddingTop: 10,
   	paddingBottom: 10,
-  	
+  	margin: '0 5px 0 5px',
+  },
+  switchesPannel: {
+    //maxWidth: 280,
+    display: 'block',
   },
   switch: {
     marginBottom: 15,
@@ -175,7 +179,7 @@ class SwitchesComponent extends React.Component {
 
   render() {
     return (
-      <div >
+      <div style={styles.switchesPannel} id="switchesPannel">
         <Paper style={styles.paper} zDepth={3} >
           <div >
             <Toggle label="One" 

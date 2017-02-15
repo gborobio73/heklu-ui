@@ -3,19 +3,18 @@ import FontIcon from 'material-ui/FontIcon';
 import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
 import Paper from 'material-ui/Paper';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import { hashHistory } from 'react-router';
-import MediaQuery from 'react-responsive';
+import $ from "jquery";
 
 const switchesIcon = <FontIcon className="material-icons">lightbulb_outline</FontIcon>;
 const consoleIcon = <FontIcon className="material-icons">speaker_notes</FontIcon>;
-const aboutIcon = <FontIcon className="material-icons">contact_mail</FontIcon>;
 
 const styles = {
     navbar: {
       position: 'fixed',
       bottom:0,
       left:0,
-      width: '100%',      
+      width: '100%',  
+      zIndex: 99,
     },    
 };
 class HekluBottomNavigation extends Component {
@@ -27,18 +26,16 @@ class HekluBottomNavigation extends Component {
     this.setState({selectedIndex: index})
     switch(index) {
       case 0:
-          hashHistory.push('/lights');
+          $( "#switchesPannel" ).show();
+          $( "#consolePannel" ).hide();
           break;
       case 1:
-          hashHistory.push('/console');
-          break;
-      case 2:
-          hashHistory.push('/about');
+          $( "#switchesPannel" ).hide();
+          $( "#consolePannel" ).show();
           break;
       default:
           break;
-    }
-    
+    }    
   }
 
   render() {
@@ -52,17 +49,10 @@ class HekluBottomNavigation extends Component {
                 icon={switchesIcon}
                 onTouchTap={() => this.handleTouchTap(0)}
               />
-              <MediaQuery maxWidth={641}>
-                <BottomNavigationItem
+              <BottomNavigationItem
                   label="Console"
                   icon={consoleIcon}
                   onTouchTap={() => this.handleTouchTap(1)}
-                />
-              </MediaQuery>              
-              <BottomNavigationItem
-                label="About"
-                icon={aboutIcon}                
-                onTouchTap={() => this.handleTouchTap(2)}
               />
             </BottomNavigation>
           </Paper>

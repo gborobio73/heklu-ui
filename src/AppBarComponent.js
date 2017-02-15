@@ -22,7 +22,7 @@ const LightsMenu = (props) => (
     targetOrigin={{horizontal: 'right', vertical: 'top'}}
     anchorOrigin={{horizontal: 'right', vertical: 'top'}}
   >
-    <MenuItem primaryText="Lights" containerElement={<Link to="/lights" />} />
+    <MenuItem primaryText="Home" containerElement={<Link to="/home" />} />
     <MenuItem primaryText="About" containerElement={<Link to="/about" />} />
   </IconMenu>
 );
@@ -49,7 +49,7 @@ class AppBarComponent extends Component {
           style={styles.app_bar}
           //iconElementLeft={<IconButton><NavigationClose /></IconButton>}
           showMenuIconButton={false}
-          //iconElementRight={<LightsMenu />}
+          iconElementRight={<LightsMenu />}
         />        
       </div>
     );
