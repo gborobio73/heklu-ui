@@ -1,22 +1,13 @@
 import React from 'react';
 import Paper from 'material-ui/Paper';
 import Toggle from 'material-ui/Toggle';
-import ErrorBarComponent from './ErrorBarComponent.js';
 import Stomp from 'stompjs';
 
 const styles = {  
   toggle: {
     marginBottom: 32,
   },
-  paper: {
-  	paddingLeft: 10,
-  	paddingRight: 10,
-  	paddingTop: 10,
-  	paddingBottom: 10,
-  	margin: '0 5px 0 5px',
-  },
   switchesPannel: {
-    //maxWidth: 280,
     display: 'block',
   },
   switch: {
@@ -25,8 +16,8 @@ const styles = {
 };
 
 var stompClient;
-//var url ='https://agent.electricimp.com/SmkBeMW_hTdc';
-var url ='/switch';
+var url ='https://agent.electricimp.com/gLk_GnM9ixRs';
+//var url ='/switch';
 
 class SwitchesComponent extends React.Component {
 
@@ -147,10 +138,8 @@ class SwitchesComponent extends React.Component {
   }  
 
   showErrorWithText(text){
-    this.setState({
-      errorBar: {open: true, message: text},
-    });
-  }
+    this.props.onError(text);
+   }
 
   handleToggle (event){
     var self= this; 
@@ -168,7 +157,10 @@ class SwitchesComponent extends React.Component {
         }
         throw new Error('Network response was not ok.');
       })
-      .then(function(response) { 
+      .then(function(response) {
+        if (!stompClient.connected) {
+          self.connectToTopic();
+        } 
         stompClient.send("/app/send", {}, JSON.stringify(req));
       })
       .catch(function(error) {
@@ -180,7 +172,7 @@ class SwitchesComponent extends React.Component {
   render() {
     return (
       <div style={styles.switchesPannel} id="switchesPannel">
-        <Paper style={styles.paper} zDepth={3} >
+        <Paper className="paper-container" zDepth={3} >
           <div >
             <Toggle label="One" 
               style={styles.switch}
@@ -239,10 +231,6 @@ class SwitchesComponent extends React.Component {
             />  
           </div>          
         </Paper>        
-        <ErrorBarComponent
-          open={this.state.errorBar.open}
-          message={this.state.errorBar.message}          
-        />
       </div>  
 
     )

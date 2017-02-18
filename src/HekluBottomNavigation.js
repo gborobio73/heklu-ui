@@ -3,10 +3,11 @@ import FontIcon from 'material-ui/FontIcon';
 import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
 import Paper from 'material-ui/Paper';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import $ from "jquery";
+import $ from 'jquery';
 
 const switchesIcon = <FontIcon className="material-icons">lightbulb_outline</FontIcon>;
 const consoleIcon = <FontIcon className="material-icons">speaker_notes</FontIcon>;
+const aboutIcon = <FontIcon className="material-icons">contact_mail</FontIcon>;
 
 const styles = {
     navbar: {
@@ -28,10 +29,17 @@ class HekluBottomNavigation extends Component {
       case 0:
           $( "#switchesPannel" ).show();
           $( "#consolePannel" ).hide();
+          $( "#aboutPannel" ).hide();
           break;
       case 1:
-          $( "#switchesPannel" ).hide();
           $( "#consolePannel" ).show();
+          $( "#switchesPannel" ).hide();
+          $( "#aboutPannel" ).hide();          
+          break;
+      case 2:
+          $( "#consolePannel" ).hide();
+          $( "#switchesPannel" ).hide();
+          $( "#aboutPannel" ).show();          
           break;
       default:
           break;
@@ -53,6 +61,11 @@ class HekluBottomNavigation extends Component {
                   label="Console"
                   icon={consoleIcon}
                   onTouchTap={() => this.handleTouchTap(1)}
+              />
+              <BottomNavigationItem
+                label="About"
+                icon={aboutIcon}                
+                onTouchTap={() => this.handleTouchTap(2)}
               />
             </BottomNavigation>
           </Paper>

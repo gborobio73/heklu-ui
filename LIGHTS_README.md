@@ -12,7 +12,7 @@ A Set of React Components that Implement Google's Material Design. http://www.ma
 Google Material is a unified system that combines theory, resources, and tools for crafting digital experiences. https://material.io/
 
 ## Other UI frameworks
-- jQuery: to make ajax calls to backend
+- fetch: to make ajax calls to backend
 - react-responsive: brings media queries to react
 - react-router: routing library for React (https://github.com/ReactTraining/react-router)
 

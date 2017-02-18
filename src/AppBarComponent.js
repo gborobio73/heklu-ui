@@ -49,7 +49,7 @@ class AppBarComponent extends Component {
           style={styles.app_bar}
           //iconElementLeft={<IconButton><NavigationClose /></IconButton>}
           showMenuIconButton={false}
-          iconElementRight={<LightsMenu />}
+          //iconElementRight={<LightsMenu />}
         />        
       </div>
     );

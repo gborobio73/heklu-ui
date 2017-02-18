@@ -1,6 +1,5 @@
 import React from 'react';
 import Paper from 'material-ui/Paper';
-import ErrorBarComponent from './ErrorBarComponent.js';
 import Stomp from 'stompjs';
 
 const styles = {
@@ -8,29 +7,20 @@ const styles = {
     //display: 'none'
   },
 	paper: {
-  	paddingLeft: 10,
-  	paddingRight: 10,
-  	paddingTop: 10,
-  	paddingBottom: 10,
     color: 'rgb(0, 187, 9)',
-    //color: '#1ff042',
     letterSpacing: '0.12em',
     textShadow: '0 0 2px rgba(1, 210, 36, 0.75)',   
     background: 'black',
     margin: '0 5px 0 5px',
 	},
-	console:{
-		height: 370,
+	console:{		
   	width: '100%',
   	resize: 'none',
-  	//border: '2px solid',
-    border: 'none',
+  	border: 'none',
     whiteSpace: 'pre-wrap',
     overflow: 'overlay',
     fontSize: '0.7em',
-
 	}
-
 };
 
 var stompClient;
@@ -39,15 +29,12 @@ class ConsoleComponent extends React.Component{
 
   constructor(props) {
     super(props);
-    
-    console.log("Console component.");
-
     this.state = {
-		console: '', 
-		errorBar: {
-	        open: false, 
-	        message:''
-      	}
+  		console: '', 
+  		errorBar: {
+  	        open: false, 
+  	        message:''
+        	}
     };
 
     styles.consolePannel.display ='none';
@@ -55,34 +42,42 @@ class ConsoleComponent extends React.Component{
 
   writeMessageToConsole(message){
     var currentConsole = this.state.console;
-    //currentConsole = currentConsole.slice(0, -1) + message + '\r\n$ > _' ; 
     currentConsole = currentConsole+ '\r\n[heklu ~]$ ' + message ; 
     this.setState({console: currentConsole});
-    //this.refs.console.innerHtml= 'aaaa';
     this.refs.console.scrollTop = this.refs.console.scrollHeight;
   }
 
+  reconnect(){
+    if(stompClient === null || stompClient === undefined || !stompClient.connected){
+      this.connectToTopic();
+    }
+  }
+
   componentDidMount() {
-  	var self = this;       
+  	this.connectToTopic();
+    //this.interval = setInterval(() => this.reconnect(), 5000);
+  };
+
+  connectToTopic(){
     var protocol = (document.location.protocol === "http:") ? "ws:": "wss:";
     var port = (window.location.hostname === 'localhost') ? ':8080': '';
     var socket = new WebSocket(protocol +'//' + window.location.hostname + port + '/heklu-websocket');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, 
-    	function (frame) {
-	        self.writeMessageToConsole('Connected.'); 
-	        stompClient.subscribe('/topic/console', function (message) {
-	          var theMessage =JSON.parse(message.body).string;
-            self.writeMessageToConsole(theMessage);                
-        	});
-          stompClient.subscribe('/topic/heartbeat', function (message) {
+      (frame) => {
+          this.writeMessageToConsole('Connected.'); 
+          stompClient.subscribe('/topic/console',  (message)=> {
+            var theMessage =JSON.parse(message.body).string;     
+            this.writeMessageToConsole(theMessage);       
+          });
+          stompClient.subscribe('/topic/heartbeat',  (message)=> {
              console.log("Received "+message.body);
           });
-    	},function(message) {
+      },(message) =>{
           console.log(message);
-          self.writeMessageToConsole("Connection lost.");
-        	self.showErrorWithText('Disconnected.');
-      	});
+          this.writeMessageToConsole("Connection lost.");
+          this.showErrorWithText('Disconnected.');
+        });
   }
 
   componentWillUnmount() {
@@ -90,28 +85,20 @@ class ConsoleComponent extends React.Component{
   }
 	
   showErrorWithText(text){
-    this.setState({
-      errorBar: {open: true, message: text},
-    });
+    this.props.onError(text);
   }
   render() {
     return (      
       <div style={styles.consolePannel} id="consolePannel">		
-  			<Paper style={styles.paper} zDepth={3} >
-  				{/*<textarea ref="console" style={styles.console} readOnly value={this.state.console}>
-  				</textarea>*/}
-          <div ref="console" style={styles.console} >        
+  			<Paper style={styles.paper} className="paper-container" zDepth={3} >
+  				<div ref="console" style={styles.console} >        
             <span>{this.state.console}</span><br/>
-            <span>[heklu ~]$ </span><span className="blink">_</span> <span className="cursor"> </span>
+            <span>[heklu ~]$ </span><span className="blink">_</span>
           </div>
   			</Paper>
-			<ErrorBarComponent
-          open={this.state.errorBar.open}
-          message={this.state.errorBar.message}          
-        />
 		</div>     
     );
   }
-
 }
+
 export default ConsoleComponent;

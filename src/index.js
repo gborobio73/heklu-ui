@@ -7,7 +7,7 @@ import { Router, Route, IndexRoute, hashHistory } from 'react-router'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import LightsPanelComponent from './LightsPanelComponent';
 import AppBarComponent from './AppBarComponent';
-import AboutComponent from './AboutComponent';
+
 const styles = {
   heklu:{
     //maxWidth: 680,
@@ -27,8 +27,7 @@ const App = React.createClass({
   		  </MuiThemeProvider>          
         <div >
           {this.props.children}
-        </div>
-             
+        </div>             
       </div>
     )
   }
@@ -39,7 +38,6 @@ ReactDOM.render(
 	    <Route path="/" component={App}>
 	    	<IndexRoute component={LightsPanelComponent} />
 	      <Route path="home" component={LightsPanelComponent} />
-	      <Route path="about" component={AboutComponent} />	      	   
 	    </Route>
   	</Router>
 	,

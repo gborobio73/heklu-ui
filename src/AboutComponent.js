@@ -1,38 +1,29 @@
 import React from 'react';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
 import Paper from 'material-ui/Paper';
-import FontIcon from 'material-ui/FontIcon';
-const aboutIcon = <FontIcon className="material-icons">contact_mail</FontIcon>;
 
 const styles = {
 	about: { 
 	},
-	navbar: {
-      position: 'fixed',
-      bottom:0,
-      left:0,
-      width: '100%',  
-      zIndex: 99,
-    },
+	paper: { 		
+	},	
 };
 
-const AboutComponent = () => (
-    <MuiThemeProvider >
-    	<div>
-        <div style={styles.about}>
-          <h4>Welcome to Heklu.</h4>
-        </div>	
-        <Paper zDepth={3} style={styles.navbar} className="navbar-screen">
-            <BottomNavigation selectedIndex={0}>
-              <BottomNavigationItem
-                label="About"
-                icon={aboutIcon}                
-              />
-            </BottomNavigation>
-          </Paper>
-          </div>
-     </MuiThemeProvider>
-);
+class AboutComponent extends React.Component{
+	constructor(props) {
+	    super(props);
+	    styles.about.display ='none';
+  	};
+
+  	render() {
+	    return (
+	    	<div style={styles.about} id="aboutPannel">			          
+		        <Paper zDepth={3} style={styles.paper} className="paper-container">
+		        	Welcome to Heklu.
+		        </Paper>	
+			</div>
+		    
+	    )
+	}
+}
 
 export default AboutComponent;
