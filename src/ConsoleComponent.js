@@ -59,7 +59,7 @@ class ConsoleComponent extends React.Component{
   	this.connectToTopic();
     //this.interval = setInterval(() => this.reconnect(), 5000);
   };
-
+  
   connectToTopic(){
     var protocol = (document.location.protocol === "http:") ? "ws:": "wss:";
     var port = (window.location.hostname === 'localhost') ? ':8080': '';
