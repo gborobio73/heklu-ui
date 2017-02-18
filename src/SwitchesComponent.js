@@ -16,8 +16,8 @@ const styles = {
 };
 
 var stompClient;
-var url ='https://agent.electricimp.com/gLk_GnM9ixRs';
-//var url ='/switch';
+//var url ='https://agent.electricimp.com/gLk_GnM9ixRs';
+var url ='/switch';
 
 class SwitchesComponent extends React.Component {
 

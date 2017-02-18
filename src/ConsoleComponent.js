@@ -12,8 +12,10 @@ const styles = {
     textShadow: '0 0 2px rgba(1, 210, 36, 0.75)',   
     background: 'black',
     margin: '0 5px 0 5px',
+    display: 'flex',
 	},
 	console:{		
+
   	width: '100%',
   	resize: 'none',
   	border: 'none',
