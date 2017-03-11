@@ -17,7 +17,7 @@ const styles = {
 
 var stompClient;
 //var url ='https://agent.electricimp.com/gLk_GnM9ixRs';
-var url ='/switch';
+var url ='/switches';
 
 class SwitchesComponent extends React.Component {
 
@@ -161,7 +161,7 @@ class SwitchesComponent extends React.Component {
         if (!stompClient.connected) {
           self.connectToTopic();
         } 
-        stompClient.send("/app/send", {}, JSON.stringify(req));
+        stompClient.send("/app/broadcast", {}, JSON.stringify(req));
       })
       .catch(function(error) {
         self.showErrorWithText(error.message );
