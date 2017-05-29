@@ -2,7 +2,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Route, IndexRoute, hashHistory } from 'react-router'
+import { Router, Route, IndexRoute, hashHistory } from 'react-router';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import LightsPanelComponent from './LightsPanelComponent';
@@ -18,7 +18,7 @@ const styles = {
 
 injectTapEventPlugin();
 
-const App = React.createClass({
+class App extends React.Component{
   render() {
     return (
       <div style={styles.heklu} className="screen">
@@ -31,7 +31,7 @@ const App = React.createClass({
       </div>
     )
   }
-})
+}
 
 ReactDOM.render(
 	<Router history={hashHistory}>
